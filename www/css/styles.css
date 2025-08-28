@@ -1,0 +1,50 @@
+.informe-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 360px;
+  margin: 40px auto;
+}
+
+.card-puntaje {
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  padding: 20px 24px;
+  color: white;
+  text-align: center;
+  user-select: none;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  cursor: default;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.card-puntaje:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px);
+}
+
+.card-puntaje h2 {
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 0.03em;
+}
+
+.puntaje-valor {
+  font-size: 3.2rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.bg-azul {
+  background-color: #59abf8;
+}
+
+.bg-celeste {
+  background-color: #76d3ea;
+}
+
+#filtro-fechas {
+  width: 100%;
+}

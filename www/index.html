@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Goalify</title>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <link rel="icon" type="image/png" href="img/ico.png" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <style>
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <ion-app>
+      <!-- Menú lateral -->
+      <ion-menu
+        side="start"
+        menu-id="first"
+        content-id="main-content"
+        id="menu"
+      >
+        <ion-header>
+          <ion-toolbar color="secondary">
+            <ion-title>Menú de inicio</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-list id="menu-opciones">
+            <ion-item href="/" onclick="CerrarMenu()">
+              <ion-icon slot="start" name="home" color="secondary"></ion-icon>
+              Home
+            </ion-item>
+            <ion-item href="/login" onclick="CerrarMenu()">
+              <ion-icon slot="start" name="log-in" color="secondary"></ion-icon>
+              Login
+            </ion-item>
+            <ion-item href="/registro" onclick="CerrarMenu()">
+              <ion-icon
+                slot="start"
+                name="person-add"
+                color="secondary"
+              ></ion-icon>
+              Registro
+            </ion-item>
+            <ion-item href="/agregar-evaluacion" onclick="CerrarMenu()">
+              <ion-icon slot="start" name="add" color="secondary"></ion-icon>
+              Agregar evaluación
+            </ion-item>
+            <ion-item href="/ver-evaluaciones" onclick="CerrarMenu()">
+              <ion-icon slot="start" name="list" color="secondary"></ion-icon>
+              Evaluaciones
+            </ion-item>
+            <ion-item href="/informe-objetivos" onclick="CerrarMenu()">
+              <ion-icon
+                slot="start"
+                name="stats-chart"
+                color="secondary"
+              ></ion-icon>
+              Estadísticas
+            </ion-item>
+            <ion-item href="/mapa" onclick="CerrarMenu()">
+              <ion-icon
+                slot="start"
+                name="map-outline"
+                color="secondary"
+              ></ion-icon>
+              Mapa
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-menu>
+      <!-- FIN MENÚ -->
+
+      <!-- Contenedor principal que controla ion-menu a través de content-id -->
+      <div id="main-content" class="ion-page">
+        <!-- Componente de ruteo-->
+        <ion-router id="ruteo">
+          <ion-route url="/" component="page-home"></ion-route>
+          <ion-route url="/login" component="page-login"></ion-route>
+          <ion-route url="/registro" component="page-registro"></ion-route>
+          <ion-route
+            url="/ver-evaluaciones"
+            component="page-listar-evaluaciones"
+          ></ion-route>
+          <ion-route
+            url="/agregar-evaluacion"
+            component="page-agregar-evaluacion"
+          ></ion-route>
+          <ion-route
+            url="/informe-objetivos"
+            component="page-informe-objetivos"
+          ></ion-route>
+          <ion-route url="/mapa" component="page-mapa"></ion-route>
+        </ion-router>
+        <!-- Fin de Componente de ruteo-->
+        <ion-nav></ion-nav>
+
+        <!-- Home -->
+        <page-home class="ion-page" id="pantalla-home">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-menu-button color="secondary"></ion-menu-button>
+                <!-- Botón hamburguesa -->
+              </ion-buttons>
+              <ion-title>Home</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content
+            class="ion-padding"
+            style="
+              --background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+              text-align: center;
+            "
+          >
+            <div class="fade-in-up">
+              <ion-text
+                color="secondary"
+                style="display: block; margin-top: 25px"
+              >
+                <h1
+                  style="
+                    font-weight: 700;
+                    font-size: 3rem;
+                    letter-spacing: 0.05em;
+                  "
+                >
+                  Bienvenido a Goalify
+                </h1>
+              </ion-text>
+
+              <p style="margin-top: 14px; font-size: 1.2em; color: #555">
+                Gestioná tus objetivos de manera fácil y rápida. 🎯
+              </p>
+            </div>
+          </ion-content>
+        </page-home>
+        <!-- Registro -->
+        <page-registro class="ion-page" id="pantalla-registro">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+              </ion-buttons>
+              <ion-title>Registro</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+            <ion-list>
+              <ion-item>
+                <ion-input
+                  label="Usuario:"
+                  id="txtRegistroUsuario"
+                  label-placement="floating"
+                  placeholder="Ingrese un nombre de usuario:"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input
+                  type="password"
+                  label="Contraseña:"
+                  id="txtRegistroPassword"
+                  label-placement="floating"
+                  placeholder="Ingrese una contraseña:"
+                ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-select
+                  label="País:"
+                  id="slcRegistroPais"
+                  placeholder="Seleccione un país:"
+                ></ion-select>
+              </ion-item>
+              <ion-button expand="block" id="btnRegistrar" color="secondary"
+                >Registrar</ion-button
+              >
+            </ion-list>
+          </ion-content>
+        </page-registro>
+
+        <!-- Login -->
+        <page-login class="ion-page" id="pantalla-login">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+              </ion-buttons>
+              <ion-title>Login</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+            <ion-item>
+              <ion-input
+                label="Usuario:"
+                id="txtLoginUsuario"
+                label-placement="floating"
+                placeholder="Ingrese su nombre de usuario:"
+              ></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                type="password"
+                label="Contraseña:"
+                id="txtLoginPassword"
+                label-placement="floating"
+                placeholder="Ingrese su Contraseña:"
+              ></ion-input>
+            </ion-item>
+            <ion-button expand="block" id="btnLogin" color="secondary"
+              >Ingresar</ion-button
+            >
+          </ion-content>
+        </page-login>
+
+        <!-- Lista de Evaluaciones -->
+        <page-listar-evaluaciones
+          class="ion-page"
+          id="pantalla-listar-evaluaciones"
+        >
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+              </ion-buttons>
+              <ion-title>Evaluaciones</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+            <ion-item id="slcFiltroFechas"> </ion-item>
+            <ion-div id="listar-evaluaciones"></ion-div>
+            <div style="padding-bottom: 50px"></div>
+          </ion-content>
+        </page-listar-evaluaciones>
+
+        <!-- Agregar Evaluacion -->
+        <page-agregar-evaluacion
+          class="ion-page"
+          id="pantalla-agregar-evaluacion"
+        >
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+              </ion-buttons>
+              <ion-title>Agregar evaluación</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+            <ion-item>
+              <ion-select
+                label="Objetivo:"
+                id="slcAgregarObjetivo"
+                placeholder="Seleccione un objetivo"
+              ></ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>Calificación:</ion-label>
+              <ion-range
+                min="-5"
+                max="5"
+                step="1"
+                snaps="true"
+                ticks="true"
+                pin="true"
+                color="secondary"
+                id="rangoCalificacion"
+              >
+              </ion-range>
+            </ion-item>
+            <ion-text
+              color="medium"
+              style="margin-left: 16px; font-size: 0.9em"
+            >
+              Donde -5 es muy malo y 5 muy bueno.
+            </ion-text>
+            <br /><br />
+            <ion-item>
+              <ion-label>Seleccione una fecha:</ion-label>
+              <ion-datetime-button
+                id="dateEvaluacionFecha"
+                datetime="datetime"
+              ></ion-datetime-button>
+              <ion-modal>
+                <ion-datetime id="datetime" presentation="date"></ion-datetime>
+              </ion-modal>
+            </ion-item>
+            <ion-button
+              id="btnAgregarEvaluacion"
+              expand="block"
+              color="secondary"
+              >Agregar</ion-button
+            >
+          </ion-content>
+        </page-agregar-evaluacion>
+
+        <!-- Informe de cumplimiento de objetivos / Estadisticas -->
+        <page-informe-objetivos
+          class="ion-page"
+          id="pantalla-informe-objetivos"
+        >
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+              </ion-buttons>
+              <ion-title>Estadísticas</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding informe-container">
+            <div class="card-puntaje bg-azul">
+              <h2>Puntaje Global</h2>
+              <p id="puntaje-global" class="puntaje-valor">Cargando...</p>
+            </div>
+
+            <div class="card-puntaje bg-celeste">
+              <h2>Puntaje Diario</h2>
+              <p id="puntaje-diario" class="puntaje-valor">Cargando...</p>
+            </div>
+          </ion-content>
+        </page-informe-objetivos>
+
+        <!-- Mapa -->
+        <page-mapa class="ion-page" id="pantalla-mapa">
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-menu-button></ion-menu-button>
+              </ion-buttons>
+              <ion-title>Mapa</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content>
+            <div id="map"></div>
+          </ion-content>
+        </page-mapa>
+      </div>
+    </ion-app>
+    <script src="js/codigo.js"></script>
+  </body>
+</html>
